@@ -1,0 +1,131 @@
+type Source = String
+type ActionID = usize
+type ActionListID = usize
+type EntityID = usize
+type ChildList = Cons(EntityID, ChildList) | Nil()
+// type Action = Add(EntityID) | Delete(EntityID) | ReplaceLabel(EntityID, EntityID) | ReplaceRela(EntityID, EntityID)
+// type ActionList = ACons(Action, ActionList) | ANil()
+
+type action_list(id: ActionListID, action: ActionID, next: ActionListID)
+type action(id: ActionID, name: String, gt_id: EntityID, pred_id: EntityID)
+type entity(id: EntityID, token: String, label: String, src: Source)
+type rela(id: EntityID, rela_name: String, ent: EntityID, src: Source)
+type children(id: EntityID, children: ChildList, src: Source)
+type same_tree(gt_id: EntityID, pred_id: EntityID, dist: usize, action: ActionList)
+
+rel same_entity(id1, id2, 0, 0) = entity(id1, token, label, "GT"), 
+                                           entity(id2, token, label, "PRED")
+
+rel same_entity(id1, id2, 1, new ACons(new ReplaceLabel(id2, id2), new ANil())) = 
+                                    entity(id1, token, label1, "GT"), 
+                                    entity(id2, token, label2, "PRED"),
+                                    label1 != label2
+
+rel action($get_count(??), "replace_label", id1, id2) = entity(id1, token, label1, "GT"), 
+                                                        entity(id2, token, label2, "PRED"),
+                                                        label1 != label2
+
+
+rel same_entity(id1, id2, 1, ) = entity(id1, token, label1, "GT"), 
+                                  entity(id2, token, label2, "PRED"),
+                                  label1 != label2,
+                                  action(c, "replace_label", id1, id2)
+
+
+rel leaf(id, phase) = entity(id, _, _, phase), ~rela(_, _, id, phase)
+
+
+type process_eval_string(bound ctx: ActionList, bound eval_str: String, output_str: String)
+rel process_eval_string(ctx, e, e) = case ctx is ANil()
+rel process_eval_string(ctx, e1, $format("(add, {}), {}", eid, e2)) = 
+                    case ctx is ACons(Add(eid), cont) 
+                    and process_eval_string(cont, e1, e2)
+rel process_eval_string(ctx, e1, $format("(delete, {}), {}", eid, e2)) = 
+                    case ctx is ACons(Delete(eid), cont) 
+                    and process_eval_string(cont, e1, e2)
+rel process_eval_string(ctx, e1, $format("(replace_label, {}, {}), {}", eid1, eid2, e2)) = 
+                    case ctx is ACons(ReplaceLabel(eid1, eid2), cont) 
+                    and process_eval_string(cont, e1, e2)
+rel process_eval_string(ctx, e1, $format("(replace_rela, {}, {}), {}", eid1, eid2, e2)) = 
+                    case ctx is ACons(ReplaceRela(eid1, eid2), cont) 
+                    and process_eval_string(cont, e1, e2)
+
+type comb_action_lists(bound a1: ActionList, bound a2: ActionList, outlist: ActionList)
+rel comb_action_lists(a1, a2, a2) = case a1 is ANil() 
+rel comb_action_lists(a1, a2, new ACons(head, tail_outlist)) = case a1 is ACons(head, tail), 
+                                         comb_action_lists(tail, a2, tail_outlist)
+                                         
+
+// const a = ACons(Add(2), ACons(ReplaceRela(2, 3), ACons(ReplaceLabel(0, 1), ANil())))
+// const b = ACons(Add(2), ACons(Add(2), ACons(Delete(0), ANil())))
+// rel comb_result(outlist_str) = comb_action_lists(a, b, outlist), process_eval_string(outlist, "", outlist_str)
+// query comb_result(_)
+
+// Base case
+rel possible_tree(id1, id2, dist, al) = leaf(id1, "GT"), leaf(id2, "PRED"), same_entity(id1, id2, dist, al)
+rel possible_tree(id1, id2, 2, new ACons(new Delete(id2), new ACons(new Add(id1), new ANil()))) = 
+                      leaf(id1, "GT"), leaf(id2, "PRED"), 
+                      entity(id1, token1, label1, "GT"), 
+                      entity(id2, token2, label2, "PRED"),
+                      token1 != token2
+                      
+// rel same_tree(id1, id2, dist, al) = (id1, id2, dist) := min[id1, id2](d: possible_tree(id1, id2, d, al))
+
+// All possible Assignments only considering token same
+rel child_assignments = disjunct[id1, id2, c1](c2:
+                            same_entity(id1, id2, dist, al),
+                            rela(c1, _, id1, "GT"), 
+                            rela(c2, _, id2, "PRED")
+                          )
+
+// Check valid child assignment            
+// rel possible_child_assignment(id1, id2, c1, c2, dist_c, al_c) = 
+                             
+type valid_child_assignment(id1:EntityID, id2:EntityID, c1:EntityID, c2:EntityID, dist_c:usize, al_c:ActionList)
+rel valid_child_assignment(id1, id2, c1, c2, dist_c, al_c) = 
+      child_assignments(id1, id2, c1, c2),
+      possible_tree(c1, c2, dist_c, al_c)
+
+// Base case injective
+type injective(id1:EntityID, id2:EntityID, c1_ls:ChildList, dist:usize, al:ActionList)
+rel injective(id1, id2, c1_ls, dist, al) = case c1_ls is Nil(),
+                                           same_entity(id1, id2, dist, al)
+
+// Base case induction on combining action lists
+// rel rec_injective(id1, id2, c1_ls, child_dist + tail_dist, current_al, output_al) = 
+//         case output_al is ANil,
+//         injective(id1, id2, c1_ls, tail_dist, tail_al)
+
+
+// rel rec_injective(id1, id2, c1_ls, child_dist + tail_dist, new Cons(head, tail_al), n+1) = 
+//         valid_child_assignment(id1, id2, c1, c2, child_dist, new Cons(head, tail)),
+//         rec_injective(id1, id2, c1_ls, tail_dist, tail_al, n)
+
+// Rec injective
+// rel injective(id1, id2, c1_ls, dist, action_ls) = 
+//                                           case c1_ls is Nil(),
+//                                           same_entity(id1, id2, dist, action_ls)
+
+rel injective(id1, id2, c1_ls, child_dist + tail_dist, out_al) = 
+                                          case c1_ls is Cons(c1, c_tail),
+                                          valid_child_assignment(id1, id2, c1, c2, child_dist, c_action),
+                                          injective(id1, id2, c_tail, tail_dist, tail_al), 
+                                          comb_action_lists(c_action, tail_al, out_al)
+
+// // Base case surjective
+// rel surjective(id1, id2, c2_ls) = case c2_ls is Nil(),
+//                                         same_entity(id1, id2)
+
+// // Rec surjective
+// rel surjective(id1, id2, c2_ls) = case c2_ls is Cons(c2, c_tail),
+//                                         same_entity(id1, id2),
+//                                         rela(c1, _, id1, "GT"),
+//                                         valid_child_assignment(id1, id2, c1, c2),
+//                                         surjective(id1, id2, c_tail)
+
+// // Same tree requires bijection child and same entity
+// rel same_tree(id1, id2) = injective(id1, id2, c1_ls), 
+//                           children(id1, c1_ls, "GT"), 
+//                           surjective(id1, id2, c2_ls), 
+//                           children(id2, c2_ls, "PRED")
+//                           same_entity(id1, id2)

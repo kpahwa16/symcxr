@@ -1,0 +1,53 @@
+type Source = GT | PRED
+type TreeChild = Cons(Tree, TreeChild) | Nil()
+type Tree = Node(usize, TreeChild) | Leaf()
+
+type entity(id: usize, token: String, label: String, src: Source)
+type relation_name(id: usize, relation_name: String, ent: usize, src: Source)
+type tree(id: usize, children: TreeChild)
+
+rel same_entity(id1, id2) = entity(id1, token, label, GT), 
+                            entity(id2, token, label, PRED)
+
+// rel tree(id, )
+// rel same_tree(id1, id2) = leaf(id1), leaf(id2), same_entity(id1, id2)
+// rel same_tree(id1, id2) = tree(id1), tree(id2), 
+//                           child(id1, id3), child(id2, id4), ..., 
+//                           same_node(id1, id2), same_tree(id3, id4),
+//                           same_relations...
+
+// rel count_entity(n) = n = count(id: entity(id, ...))
+
+// rel tree(id1) = 
+// The ground truth graph
+rel entity(1, "acute", "OBS-DA", GT)
+rel entity(2, "process", "OBS-DA", GT)
+rel entity(3, "consolidation", "OBS-DA", GT)
+
+rel relation_name(4, "modify", 3, GT)
+rel relation_name(5, "located at", 4, GT)
+
+const gt_tree = Node(0, Cons(
+                            Node(1,
+                                Cons(Node(3, Nil()), Nil())
+                                ),
+                            Cons(
+                                Node(2, Cons(Node(4, Nil()), Nil())),
+                                Nil()
+                                )
+                        )
+                    )
+                    
+// const tree1 = Node(1, Cons(Node(3, Nil()), Nil()))
+// const tree2 = Node(2, Cons(Node(4, Nil()), Nil()))
+
+// The predicted graph
+// rel entity(2, "acute", "OBS-DA", 1, PRED)
+// rel entity(2, "acute", "OBS-DA", 2, PRED)
+// rel entity(1, "process", "OBS-DA", 0, PRED)
+// rel entity(5, "consolidation", "OBS-DA", 0, PRED)
+
+// rel relation_name(1, "modify", 1, PRED)
+// rel relation_name(2, "located at", 5, PRED)
+
+// query same_entity

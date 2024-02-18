@@ -1,0 +1,55 @@
+type Source = String
+type EntityID = usize
+type ChildList = Cons(EntityID, ChildList) | Nil()
+
+type entity(id: EntityID, token: String, label: String, src: Source)
+type rela(id: EntityID, rela_name: String, ent: EntityID, src: Source)
+type children(id: EntityID, children: ChildList, src: Source)
+
+rel same_entity(id1, id2) = entity(id1, token, label1, "GT"), 
+                            entity(id2, token, label2, "PRED"),
+                            edit_label(label1, label2)
+
+rel leaf(id, phase) = entity(id, _, _, phase), ~rela(_, _, id, phase)
+
+// Base case
+rel same_tree(id1, id2) = leaf(id1, "GT"), leaf(id2, "PRED"), same_entity(id1, id2)
+
+rel child_assignments = disjunct[id1, id2, c1](c2:
+                            same_entity(id1, id2),
+                            rela(c1, _, id1, "GT"), 
+                            rela(c2, _, id2, "PRED")
+                          )
+                      
+rel valid_child_assignment(id1, id2, c1, c2) = child_assignments(id1, id2, c1, c2) and
+                             same_entity(id1, id2) and
+                             same_tree(c1, c2)
+
+// Base case injective
+rel injective(id1, id2, c1_ls) = case c1_ls is Nil(),
+                                      same_entity(id1, id2)
+
+// Rec injective
+rel injective(id1, id2, c1_ls) = case c1_ls is Cons(c1, c_tail),
+                                      same_entity(id1, id2),
+                                      rela(c2, _, id2, "PRED"),
+                                      valid_child_assignment(id1, id2, c1, c2),
+                                      injective(id1, id2, c_tail)
+
+// Base case surjective
+rel surjective(id1, id2, c2_ls) = case c2_ls is Nil(),
+                                        same_entity(id1, id2)
+
+// Rec surjective
+rel surjective(id1, id2, c2_ls) = case c2_ls is Cons(c2, c_tail),
+                                        same_entity(id1, id2),
+                                        rela(c1, _, id1, "GT"),
+                                        valid_child_assignment(id1, id2, c1, c2),
+                                        surjective(id1, id2, c_tail)
+
+// Same tree requires bijection child and same entity
+rel same_tree(id1, id2) = injective(id1, id2, c1_ls), 
+                          children(id1, c1_ls, "GT"), 
+                          surjective(id1, id2, c2_ls), 
+                          children(id2, c2_ls, "PRED")
+                          same_entity(id1, id2)

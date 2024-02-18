@@ -1,0 +1,16 @@
+[project]
+name = "scallop-ablate-entity"
+version = "0.0.1"
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.entry-points."scallop.plugin.setup_arg_parser"]
+gpt = "scallop_ablate_entity:setup_arg_parser"
+
+[project.entry-points."scallop.plugin.configure"]
+gpt = "scallop_ablate_entity:configure"
+
+[project.entry-points."scallop.plugin.load_into_context"]
+gpt = "scallop_ablate_entity:load_into_context"

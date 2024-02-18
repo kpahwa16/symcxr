@@ -1,0 +1,211 @@
+import "medical_match_v2.scl"
+const c_GT_0 = Cons(3, Nil())
+const c_GT_1 = Cons(2, Nil())
+const c_GT_2 = Cons(5, Nil())
+const c_GT_3 = Cons(6, Nil())
+const c_GT_4 = Cons(12, Nil())
+const c_GT_5 = Cons(11, Nil())
+const c_GT_6 = Cons(11, Nil())
+const c_GT_7 = Cons(13, Nil())
+const c_GT_8 = Cons(16, Nil())
+const c_GT_9 = Cons(13, Nil())
+const c_GT_10 = Cons(18, Nil())
+const c_GT_11 = Cons(18, Nil())
+const c_GT_12 = Cons(19, Nil())
+const c_GT_13 = Cons(21, Nil())
+const c_GT_14 = Cons(21, Nil())
+const c_GT_15 = Cons(26, Nil())
+const c_GT_16 = Cons(24, Nil())
+const c_GT_17 = Cons(29, Nil())
+const c_GT_18 = Cons(28, Nil())
+const c_GT_19 = Cons(27, Cons(25, Cons(23, Cons(22, Cons(20, Cons(17, Cons(15, Cons(14, Cons(10, Cons(9, Cons(8, Cons(7, Cons(4, Cons(1, Nil()))))))))))))))
+const c_PRED_20 = Cons(3, Nil())
+const c_PRED_21 = Cons(2, Nil())
+const c_PRED_22 = Cons(11, Nil())
+const c_PRED_23 = Cons(11, Nil())
+const c_PRED_24 = Cons(13, Nil())
+const c_PRED_25 = Cons(16, Nil())
+const c_PRED_26 = Cons(13, Nil())
+const c_PRED_27 = Cons(19, Cons(18, Nil()))
+const c_PRED_28 = Cons(18, Nil())
+const c_PRED_29 = Cons(20, Nil())
+const c_PRED_30 = Cons(20, Nil())
+const c_PRED_31 = Cons(26, Nil())
+const c_PRED_32 = Cons(23, Nil())
+const c_PRED_33 = Cons(23, Nil())
+const c_PRED_34 = Cons(29, Nil())
+const c_PRED_35 = Cons(28, Nil())
+const c_PRED_36 = Cons(5, Nil())
+const c_PRED_37 = Cons(6, Nil())
+const c_PRED_38 = Cons(12, Nil())
+const c_PRED_39 = Cons(9, Cons(8, Cons(7, Cons(4, Cons(27, Cons(25, Cons(24, Cons(22, Cons(21, Cons(17, Cons(15, Cons(14, Cons(10, Cons(1, Nil()))))))))))))))
+
+rel entity={(1, "mild", "OBS-DP", "GT"), 
+(3, "atelectasis", "OBS-DP", "GT"), 
+(2, "basilar", "ANAT-DP", "GT"), 
+(4, "focal", "OBS-DA", "GT"), 
+(5, "consolidation", "OBS-DA", "GT"), 
+(6, "pleural", "ANAT-DP", "GT"), 
+(7, "effusion", "OBS-DA", "GT"), 
+(8, "pneumothorax", "OBS-DA", "GT"), 
+(9, "minimal", "OBS-DP", "GT"), 
+(12, "thickening", "OBS-DP", "GT"), 
+(10, "biapical", "ANAT-DP", "GT"), 
+(11, "pleural", "ANAT-DP", "GT"), 
+(13, "Cardiac", "ANAT-DP", "GT"), 
+(14, "silhouette", "ANAT-DP", "GT"), 
+(15, "top", "OBS-DP", "GT"), 
+(16, "normal", "OBS-DP", "GT"), 
+(17, "adjacent", "ANAT-DP", "GT"), 
+(18, "epicardial", "ANAT-DP", "GT"), 
+(19, "fat", "OBS-U", "GT"), 
+(20, "pad", "OBS-U", "GT"), 
+(21, "aorta", "ANAT-DP", "GT"), 
+(22, "calcified", "OBS-DP", "GT"), 
+(23, "tortuous", "OBS-DP", "GT"), 
+(24, "degenerative", "OBS-DP", "GT"), 
+(26, "spine", "ANAT-DP", "GT"), 
+(25, "changes", "OBS-DP", "GT"), 
+(27, "acute", "OBS-DA", "GT"), 
+(29, "process", "OBS-DA", "GT"), 
+(28, "cardiopulmonary", "ANAT-DP", "GT"), 
+(0, "root", "root", "GT"), 
+(1, "mild", "OBS-DP", "PRED"), 
+(3, "atelectasis", "OBS-DP", "PRED"), 
+(10, "biapical", "ANAT-DP", "PRED"), 
+(11, "pleural", "ANAT-DP", "PRED"), 
+(12, "thickening", "OBS-DP", "PRED"), 
+(13, "Cardiac", "ANAT-DP", "PRED"), 
+(14, "silhouette", "ANAT-DP", "PRED"), 
+(15, "top", "OBS-DP", "PRED"), 
+(16, "normal", "OBS-DP", "PRED"), 
+(17, "adjacent", "ANAT-DP", "PRED"), 
+(18, "epicardial", "ANAT-DP", "PRED"), 
+(19, "fat pad", "ANAT-DP", "PRED"), 
+(2, "basilar", "ANAT-DP", "PRED"), 
+(20, "aorta", "ANAT-DP", "PRED"), 
+(21, "calcified", "OBS-DP", "PRED"), 
+(22, "tortuous", "OBS-DP", "PRED"), 
+(23, "degenerative", "OBS-DP", "PRED"), 
+(26, "spine", "ANAT-DP", "PRED"), 
+(24, "changes", "OBS-DP", "PRED"), 
+(25, "along", "OBS-DP", "PRED"), 
+(27, "acute", "OBS-DA", "PRED"), 
+(29, "process", "OBS-DA", "PRED"), 
+(28, "cardiopulmonary", "ANAT-DP", "PRED"), 
+(4, "focal", "OBS-DA", "PRED"), 
+(5, "consolidation", "OBS-DA", "PRED"), 
+(6, "pleural", "ANAT-DP", "PRED"), 
+(7, "effusion", "OBS-DA", "PRED"), 
+(8, "pneumothorax", "OBS-DA", "PRED"), 
+(9, "minimal", "OBS-DP", "PRED"), 
+(0, "root", "root", "PRED")}
+
+rel rela={(3, "modify", 1, "GT"), 
+(2, "located_at", 3, "GT"), 
+(5, "modify", 4, "GT"), 
+(6, "located_at", 7, "GT"), 
+(12, "modify", 9, "GT"), 
+(11, "located_at", 12, "GT"), 
+(11, "modify", 10, "GT"), 
+(13, "modify", 14, "GT"), 
+(16, "modify", 15, "GT"), 
+(13, "located_at", 16, "GT"), 
+(18, "modify", 17, "GT"), 
+(18, "located_at", 19, "GT"), 
+(19, "modify", 20, "GT"), 
+(21, "located_at", 22, "GT"), 
+(21, "located_at", 23, "GT"), 
+(26, "located_at", 24, "GT"), 
+(24, "modify", 25, "GT"), 
+(29, "modify", 27, "GT"), 
+(28, "located_at", 29, "GT"), 
+(1, "root", 0, "GT"), 
+(4, "root", 0, "GT"), 
+(7, "root", 0, "GT"), 
+(8, "root", 0, "GT"), 
+(9, "root", 0, "GT"), 
+(10, "root", 0, "GT"), 
+(14, "root", 0, "GT"), 
+(15, "root", 0, "GT"), 
+(17, "root", 0, "GT"), 
+(20, "root", 0, "GT"), 
+(22, "root", 0, "GT"), 
+(23, "root", 0, "GT"), 
+(25, "root", 0, "GT"), 
+(27, "root", 0, "GT"), 
+(3, "modify", 1, "PRED"), 
+(2, "located_at", 3, "PRED"), 
+(11, "modify", 10, "PRED"), 
+(11, "located_at", 12, "PRED"), 
+(13, "modify", 14, "PRED"), 
+(16, "modify", 15, "PRED"), 
+(13, "located_at", 16, "PRED"), 
+(18, "modify", 17, "PRED"), 
+(19, "modify", 17, "PRED"), 
+(18, "located_at", 19, "PRED"), 
+(20, "located_at", 21, "PRED"), 
+(20, "located_at", 22, "PRED"), 
+(26, "located_at", 23, "PRED"), 
+(23, "modify", 24, "PRED"), 
+(23, "modify", 25, "PRED"), 
+(29, "modify", 27, "PRED"), 
+(28, "located_at", 29, "PRED"), 
+(5, "modify", 4, "PRED"), 
+(6, "located_at", 7, "PRED"), 
+(12, "modify", 9, "PRED"), 
+(1, "root", 0, "PRED"), 
+(10, "root", 0, "PRED"), 
+(14, "root", 0, "PRED"), 
+(15, "root", 0, "PRED"), 
+(17, "root", 0, "PRED"), 
+(21, "root", 0, "PRED"), 
+(22, "root", 0, "PRED"), 
+(24, "root", 0, "PRED"), 
+(25, "root", 0, "PRED"), 
+(27, "root", 0, "PRED"), 
+(4, "root", 0, "PRED"), 
+(7, "root", 0, "PRED"), 
+(8, "root", 0, "PRED"), 
+(9, "root", 0, "PRED")}
+
+rel children={(1, c_GT_0, "GT"), 
+(3, c_GT_1, "GT"), 
+(4, c_GT_2, "GT"), 
+(7, c_GT_3, "GT"), 
+(9, c_GT_4, "GT"), 
+(12, c_GT_5, "GT"), 
+(10, c_GT_6, "GT"), 
+(14, c_GT_7, "GT"), 
+(15, c_GT_8, "GT"), 
+(16, c_GT_9, "GT"), 
+(17, c_GT_10, "GT"), 
+(19, c_GT_11, "GT"), 
+(20, c_GT_12, "GT"), 
+(22, c_GT_13, "GT"), 
+(23, c_GT_14, "GT"), 
+(24, c_GT_15, "GT"), 
+(25, c_GT_16, "GT"), 
+(27, c_GT_17, "GT"), 
+(29, c_GT_18, "GT"), 
+(0, c_GT_19, "GT"), 
+(1, c_PRED_20, "PRED"), 
+(3, c_PRED_21, "PRED"), 
+(10, c_PRED_22, "PRED"), 
+(12, c_PRED_23, "PRED"), 
+(14, c_PRED_24, "PRED"), 
+(15, c_PRED_25, "PRED"), 
+(16, c_PRED_26, "PRED"), 
+(17, c_PRED_27, "PRED"), 
+(19, c_PRED_28, "PRED"), 
+(21, c_PRED_29, "PRED"), 
+(22, c_PRED_30, "PRED"), 
+(23, c_PRED_31, "PRED"), 
+(24, c_PRED_32, "PRED"), 
+(25, c_PRED_33, "PRED"), 
+(27, c_PRED_34, "PRED"), 
+(29, c_PRED_35, "PRED"), 
+(4, c_PRED_36, "PRED"), 
+(7, c_PRED_37, "PRED"), 
+(9, c_PRED_38, "PRED"), 
+(0, c_PRED_39, "PRED")}

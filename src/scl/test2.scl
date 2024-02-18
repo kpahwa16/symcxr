@@ -1,0 +1,24 @@
+import "medical_match_v2.scl"
+
+// The ground truth graph
+rel entity(1, "acute", "OBS-DA", "GT")
+rel entity(2, "process", "OBS-DA", "GT")
+rel entity(3, "consolidation", "OBS-DA", "GT")
+
+rel rela(1, "located at", 2, "GT")
+
+const c1 = Cons(1, Nil())
+const c2 = Cons(5, Cons(2, Nil()))
+
+rel children = {
+    (2, c1, "GT"),
+    (1, c2, "PRED")
+    }
+
+// The "PRED"icted graph
+rel entity(2, "acute", "OBS-DA", "PRED")
+rel entity(1, "process", "OBS-DA", "PRED")
+rel entity(5, "consolidation", "OBS-DA", "PRED")
+
+rel rela(5, "modify", 1, "PRED")
+rel rela(2, "located at", 1, "PRED")
